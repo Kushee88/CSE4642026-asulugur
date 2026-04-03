@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a389d086-4bc7-44b6-b2f1-4ff9ce595e97" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/maven.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/edu/asu/cse464/GraphFeature5Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/edu/asu/cse464/Path.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/asu/cse464/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/asu/cse464/Graph.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -46,7 +42,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "dfs",
     "kotlin-language-version-configured": "true",
     "onboarding.tips.debug.path": "C:/Users/anjal/IdeaProjects/CSE4642026-asulugur/src/main/java/edu/asu/Main.java",
     "vue.rearranger.settings.migration": "true"
@@ -104,7 +100,7 @@
       <updated>1772769166124</updated>
       <workItem from="1772769187997" duration="6247000" />
       <workItem from="1772848760650" duration="9995000" />
-      <workItem from="1775244307599" duration="4241000" />
+      <workItem from="1775244307599" duration="6398000" />
     </task>
     <servers />
   </component>

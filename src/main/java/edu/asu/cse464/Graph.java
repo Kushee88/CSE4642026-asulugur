@@ -111,6 +111,39 @@ public class Graph {
         edges.remove(edgeToRemove);
     }
 
+    //DFS search (go deep first)
+    public Path GraphSearch(String src, String dst) {
+        //if nodes don’t exist → no path
+        if (!nodes.contains(src) || !nodes.contains(dst)) return null;
+        java.util.Set<String> visited = new java.util.HashSet<>();
+        java.util.List<String> path = new java.util.ArrayList<>();
+        if (dfsHelper(src, dst, visited, path)) {
+            return new Path(path);
+        }
+        return null;
+    }
+
+    //helper method for DFS
+    private boolean dfsHelper(String current, String dst, java.util.Set<String> visited, java.util.List<String> path) {
+        visited.add(current);
+        path.add(current);
+
+        //if we reached destination
+        if (current.equals(dst)) return true;
+        //go through neighbors
+        for (Edge e : edges) {
+            if (e.getSource().equals(current)) {
+                String next = e.getDestination();
+                if (!visited.contains(next)) {
+                    if (dfsHelper(next, dst, visited, path)) return true;
+                }
+            }
+        }
+        //if dead end → go back
+        path.remove(path.size() - 1);
+        return false;
+    }
+
 
     @Override
     public String toString() {
