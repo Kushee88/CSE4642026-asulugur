@@ -9,6 +9,11 @@ public class Graph {
     private final Set<String> nodes;
     private final Set<Edge> edges;
 
+    //used to choose which search algorithm to run
+    public enum Algorithm {
+        BFS, DFS
+    }
+
     public Graph() {
         //linkedHashSet keeps insertion order which makes output easier to read
         this.nodes = new LinkedHashSet<>();
@@ -26,7 +31,8 @@ public class Graph {
         if (cleaned.isEmpty()) {
             return false;
         }
-        //returns false automaticaly if the node already exists
+
+        //returns false automatically if the node already exists
         return nodes.add(cleaned);
     }
 
@@ -42,7 +48,7 @@ public class Graph {
     }
 
     public boolean addEdge(String srcLabel, String dstLabel) {
-        //both source and destination needs to exist
+        //both source and destination need to exist
         if (srcLabel == null || dstLabel == null) {
             return false;
         }
@@ -53,6 +59,7 @@ public class Graph {
         if (src.isEmpty() || dst.isEmpty()) {
             return false;
         }
+
         //making sure the nodes are in the graph before adding the edge
         addNode(src);
         addNode(dst);
@@ -75,27 +82,35 @@ public class Graph {
         if (label == null) {
             throw new IllegalArgumentException("Node label cannot be null.");
         }
-        //cleaning input (removing extra spaces)
+
+        //cleaning input
         String cleaned = label.trim();
+
+        //empty label not allowed
         if (cleaned.isEmpty()) {
             throw new IllegalArgumentException("Node label cannot be empty.");
         }
+
         //node must exist in graph
         if (!nodes.contains(cleaned)) {
             throw new IllegalArgumentException("Node does not exist: " + cleaned);
         }
+
         //remove node
         nodes.remove(cleaned);
-        //remove all edges conected to this node
+
+        //remove all edges connected to this node
         edges.removeIf(edge ->
                 edge.getSource().equals(cleaned) || edge.getDestination().equals(cleaned));
     }
 
     //removes multiple nodes from the graph
     public void removeNodes(String[] labels) {
+        //array itself cannot be null
         if (labels == null) {
             throw new IllegalArgumentException("Node label array cannot be null.");
         }
+
         //remove each node one by one using removeNode()
         for (String label : labels) {
             removeNode(label);
@@ -112,27 +127,38 @@ public class Graph {
         //cleaning input
         String src = srcLabel.trim();
         String dst = dstLabel.trim();
+
+        //empty labels not allowed
         if (src.isEmpty() || dst.isEmpty()) {
             throw new IllegalArgumentException("Edge labels cannot be empty.");
         }
+
         //create edge object to check if it exists
         Edge edgeToRemove = new Edge(src, dst);
+
         //edge must exist before removing
         if (!edges.contains(edgeToRemove)) {
             throw new IllegalArgumentException("Edge does not exist: " + src + " -> " + dst);
         }
+
         //remove the edge
         edges.remove(edgeToRemove);
     }
 
-    public Path GraphSearch(String src, String dst) {
-        //if either node doesn't exist-> no path possible
-        if (!nodes.contains(src) || !nodes.contains(dst)) return null;
+    //BFS search
+    public Path bfsSearch(String src, String dst) {
+        //if either node doesn't exist, no path possible
+        if (!nodes.contains(src) || !nodes.contains(dst)) {
+            return null;
+        }
+
         //queue for BFS traversal
         java.util.Queue<String> queue = new java.util.LinkedList<>();
+
         //to keep track of how we reached each node
         java.util.Map<String, String> parent = new java.util.HashMap<>();
-        //to avoid visiting same node agin
+
+        //to avoid visiting same node again
         java.util.Set<String> visited = new java.util.HashSet<>();
 
         queue.add(src);
@@ -140,7 +166,8 @@ public class Graph {
 
         while (!queue.isEmpty()) {
             String current = queue.poll();
-            //if we reached destination build the path
+
+            //if we reached destination, build the path
             if (current.equals(dst)) {
                 java.util.List<String> path = new java.util.ArrayList<>();
                 String step = dst;
@@ -150,8 +177,10 @@ public class Graph {
                     path.add(0, step);
                     step = parent.get(step);
                 }
+
                 return new Path(path);
             }
+
             //explore neighbors
             for (Edge e : edges) {
                 if (e.getSource().equals(current)) {
@@ -165,9 +194,66 @@ public class Graph {
                 }
             }
         }
+
+        //no path found
         return null;
     }
 
+    //DFS search
+    public Path dfsSearch(String src, String dst) {
+        //if either node doesn't exist, no path possible
+        if (!nodes.contains(src) || !nodes.contains(dst)) {
+            return null;
+        }
+
+        java.util.Set<String> visited = new java.util.HashSet<>();
+        java.util.List<String> path = new java.util.ArrayList<>();
+
+        if (dfsHelper(src, dst, visited, path)) {
+            return new Path(path);
+        }
+
+        return null;
+    }
+
+    //helper method for DFS
+    private boolean dfsHelper(String current, String dst,
+                              java.util.Set<String> visited,
+                              java.util.List<String> path) {
+        visited.add(current);
+        path.add(current);
+
+        //if we reached destination
+        if (current.equals(dst)) {
+            return true;
+        }
+
+        //go through neighbors
+        for (Edge e : edges) {
+            if (e.getSource().equals(current)) {
+                String next = e.getDestination();
+
+                if (!visited.contains(next)) {
+                    if (dfsHelper(next, dst, visited, path)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        //if dead end, go back
+        path.remove(path.size() - 1);
+        return false;
+    }
+
+    //final search API that lets user choose bfs or dfs
+    public Path GraphSearch(String src, String dst, Algorithm algo) {
+        if (algo == Algorithm.BFS) {
+            return bfsSearch(src, dst);
+        }
+
+        return dfsSearch(src, dst);
+    }
 
     @Override
     public String toString() {
@@ -195,14 +281,10 @@ public class Graph {
                 sb.append(edge).append(System.lineSeparator());
             }
         }
+
         return sb.toString().trim();
     }
 }
-
-
-
-
-
 
 
 
