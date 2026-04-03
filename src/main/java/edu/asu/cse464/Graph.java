@@ -69,46 +69,103 @@ public class Graph {
         return edges;
     }
 
+    //removes a single node from the graph
     public void removeNode(String label) {
+        //null label not allowed
         if (label == null) {
             throw new IllegalArgumentException("Node label cannot be null.");
         }
+        //cleaning input (removing extra spaces)
         String cleaned = label.trim();
         if (cleaned.isEmpty()) {
             throw new IllegalArgumentException("Node label cannot be empty.");
         }
+        //node must exist in graph
         if (!nodes.contains(cleaned)) {
             throw new IllegalArgumentException("Node does not exist: " + cleaned);
         }
+        //remove node
         nodes.remove(cleaned);
+        //remove all edges conected to this node
         edges.removeIf(edge ->
                 edge.getSource().equals(cleaned) || edge.getDestination().equals(cleaned));
     }
 
+    //removes multiple nodes from the graph
     public void removeNodes(String[] labels) {
         if (labels == null) {
             throw new IllegalArgumentException("Node label array cannot be null.");
         }
+        //remove each node one by one using removeNode()
         for (String label : labels) {
             removeNode(label);
         }
     }
 
+    //removes a specific edge from the graph
     public void removeEdge(String srcLabel, String dstLabel) {
+        //both labels must be provided
         if (srcLabel == null || dstLabel == null) {
             throw new IllegalArgumentException("Edge labels cannot be null.");
         }
 
+        //cleaning input
         String src = srcLabel.trim();
         String dst = dstLabel.trim();
         if (src.isEmpty() || dst.isEmpty()) {
             throw new IllegalArgumentException("Edge labels cannot be empty.");
         }
+        //create edge object to check if it exists
         Edge edgeToRemove = new Edge(src, dst);
+        //edge must exist before removing
         if (!edges.contains(edgeToRemove)) {
             throw new IllegalArgumentException("Edge does not exist: " + src + " -> " + dst);
         }
+        //remove the edge
         edges.remove(edgeToRemove);
+    }
+
+    public Path GraphSearch(String src, String dst) {
+        //if either node doesn't exist-> no path possible
+        if (!nodes.contains(src) || !nodes.contains(dst)) return null;
+        //queue for BFS traversal
+        java.util.Queue<String> queue = new java.util.LinkedList<>();
+        //to keep track of how we reached each node
+        java.util.Map<String, String> parent = new java.util.HashMap<>();
+        //to avoid visiting same node agin
+        java.util.Set<String> visited = new java.util.HashSet<>();
+
+        queue.add(src);
+        visited.add(src);
+
+        while (!queue.isEmpty()) {
+            String current = queue.poll();
+            //if we reached destination build the path
+            if (current.equals(dst)) {
+                java.util.List<String> path = new java.util.ArrayList<>();
+                String step = dst;
+
+                //backtracking from destination to source
+                while (step != null) {
+                    path.add(0, step);
+                    step = parent.get(step);
+                }
+                return new Path(path);
+            }
+            //explore neighbors
+            for (Edge e : edges) {
+                if (e.getSource().equals(current)) {
+                    String neighbor = e.getDestination();
+
+                    if (!visited.contains(neighbor)) {
+                        visited.add(neighbor);
+                        parent.put(neighbor, current);
+                        queue.add(neighbor);
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 
