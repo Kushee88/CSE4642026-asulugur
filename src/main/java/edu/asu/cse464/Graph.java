@@ -69,6 +69,49 @@ public class Graph {
         return edges;
     }
 
+    public void removeNode(String label) {
+        if (label == null) {
+            throw new IllegalArgumentException("Node label cannot be null.");
+        }
+        String cleaned = label.trim();
+        if (cleaned.isEmpty()) {
+            throw new IllegalArgumentException("Node label cannot be empty.");
+        }
+        if (!nodes.contains(cleaned)) {
+            throw new IllegalArgumentException("Node does not exist: " + cleaned);
+        }
+        nodes.remove(cleaned);
+        edges.removeIf(edge ->
+                edge.getSource().equals(cleaned) || edge.getDestination().equals(cleaned));
+    }
+
+    public void removeNodes(String[] labels) {
+        if (labels == null) {
+            throw new IllegalArgumentException("Node label array cannot be null.");
+        }
+        for (String label : labels) {
+            removeNode(label);
+        }
+    }
+
+    public void removeEdge(String srcLabel, String dstLabel) {
+        if (srcLabel == null || dstLabel == null) {
+            throw new IllegalArgumentException("Edge labels cannot be null.");
+        }
+
+        String src = srcLabel.trim();
+        String dst = dstLabel.trim();
+        if (src.isEmpty() || dst.isEmpty()) {
+            throw new IllegalArgumentException("Edge labels cannot be empty.");
+        }
+        Edge edgeToRemove = new Edge(src, dst);
+        if (!edges.contains(edgeToRemove)) {
+            throw new IllegalArgumentException("Edge does not exist: " + src + " -> " + dst);
+        }
+        edges.remove(edgeToRemove);
+    }
+
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
