@@ -1,10 +1,13 @@
 package edu.asu.cse464;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Graph {
+
     //using sets so duplicate edges do not get added
     private final Set<String> nodes;
     private final Set<Edge> edges;
@@ -76,6 +79,19 @@ public class Graph {
         return edges;
     }
 
+    //Refactor 3
+    public List<String> getNeighbors(String node) {
+        List<String> neighbors = new ArrayList<>();
+
+        for (Edge e : edges) {
+            if (e.getSource().equals(node)) {
+                neighbors.add(e.getDestination());
+            }
+        }
+
+        return neighbors;
+    }
+
     //removes a single node from the graph
     public void removeNode(String label) {
         //null label not allowed
@@ -100,8 +116,8 @@ public class Graph {
         nodes.remove(cleaned);
 
         //remove all edges connected to this node
-        edges.removeIf(edge ->
-                edge.getSource().equals(cleaned) || edge.getDestination().equals(cleaned));
+        edges.removeIf(edge
+                -> edge.getSource().equals(cleaned) || edge.getDestination().equals(cleaned));
     }
 
     //removes multiple nodes from the graph
@@ -218,8 +234,8 @@ public class Graph {
 
     //helper method for DFS
     private boolean dfsHelper(String current, String dst,
-                              java.util.Set<String> visited,
-                              java.util.List<String> path) {
+            java.util.Set<String> visited,
+            java.util.List<String> path) {
         visited.add(current);
         path.add(current);
 
@@ -248,11 +264,15 @@ public class Graph {
 
     //final search API that lets user choose bfs or dfs
     public Path GraphSearch(String src, String dst, Algorithm algo) {
+        GraphSearchTemplate strategy;
+
         if (algo == Algorithm.BFS) {
-            return bfsSearch(src, dst);
+            strategy = new BFSStrategy(this);
+        } else {
+            strategy = new DFSStrategy(this);
         }
 
-        return dfsSearch(src, dst);
+        return strategy.search(src, dst);
     }
 
     @Override
@@ -285,10 +305,3 @@ public class Graph {
         return sb.toString().trim();
     }
 }
-
-
-
-
-
-
-
