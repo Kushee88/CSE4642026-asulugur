@@ -14,7 +14,7 @@ public class Path {
 
     public List<String> getNodes() {
         //return the list of nodes in the path
-        return nodes;
+        return List.copyOf(nodes);
     }
 
     //(Refactor 1)
