@@ -14,7 +14,7 @@ public class Graph {
 
     //used to choose which search algorithm to run
     public enum Algorithm {
-        BFS, DFS
+        BFS, DFS, RANDOM_WALK
     }
 
     public Graph() {
@@ -268,8 +268,10 @@ public class Graph {
 
         if (algo == Algorithm.BFS) {
             strategy = new BFSStrategy(this);
-        } else {
+        } else if (algo == Algorithm.DFS) {
             strategy = new DFSStrategy(this);
+        } else {
+            strategy = new RandomWalkStrategy(this);
         }
 
         return strategy.search(src, dst);
