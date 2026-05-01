@@ -33,13 +33,14 @@ public abstract class GraphSearchTemplate {
             Path currentPath = removeFrontier(frontier);
 
             // printing so random walk process can be shown
-            System.out.println("visiting " + currentPath);
+            System.out.println("Visit Node History: " + String.join("-", currentPath.getNodes()));
 
             // get last node in current path
             String lastNode = currentPath.getLastNode();
 
             // if destination reached return the path
             if (lastNode.equals(dst)) {
+                System.out.println("Found target node: " + dst);
                 return currentPath;
             }
 
